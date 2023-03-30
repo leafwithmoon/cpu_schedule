@@ -101,7 +101,7 @@ struct PCB handle_process_completion_pp(struct PCB ready_queue[QUEUEMAX], int *q
     for (int i=index;i<*queue_cnt-1;i++) {
         ready_queue[i] = ready_queue[i+1];
     }
-    queue_cnt--;
+    (*queue_cnt)--;
 
     // modify selected PCB
     (*max_pcb).execution_starttime = timestamp;
@@ -187,7 +187,7 @@ struct PCB handle_process_completion_srtp(struct PCB ready_queue[QUEUEMAX], int 
     for (int i=index;i<*queue_cnt-1;i++) {
         ready_queue[i] = ready_queue[i+1];
     }
-    queue_cnt--;
+    (*queue_cnt)--;
 
     // modify selected PCB
     (*max_pcb).execution_starttime = timestamp;
@@ -260,7 +260,7 @@ struct PCB handle_process_completion_rr(struct PCB ready_queue[QUEUEMAX], int *q
     for (int i=index;i<*queue_cnt-1;i++) {
         ready_queue[i] = ready_queue[i+1];
     }
-    queue_cnt--;
+    (*queue_cnt)--;
 
     // modify selected PCB
     (*max_pcb).execution_starttime = time_stamp;
