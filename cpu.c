@@ -32,7 +32,7 @@ struct PCB handle_process_arrival_pp(struct PCB ready_queue[QUEUEMAX], int *queu
     // If there is no currently-running process (i.e., the third argument is the NULLPCB), then the method returns the PCB of the newly-arriving process, 
     // indicating that it is the process to execute next. In this case, the PCB of the new process is modified so that the execution start time is set to the current timestamp, 
     // the execution end time is set to the sum of the current timestamp and the total burst time and the remaining burst time is set to the total burst time. 
-    if (is_null_pcb(current_process) == 1)
+    if (is_null_pcb(current_process))
     {
      new_process.execution_starttime = timestamp;
      new_process.execution_endtime = timestamp + new_process.total_bursttime;
@@ -64,7 +64,7 @@ struct PCB handle_process_arrival_pp(struct PCB ready_queue[QUEUEMAX], int *queu
         new_process.remaining_bursttime = new_process.total_bursttime;
 
         current_process.execution_endtime = 0;
-        current_process.remaining_bursttime = current_process.execution_endtime - timestamp;
+        current_process.remaining_bursttime = current_process.execution_endtime - 1; // TODO why it make sense???????
         ready_queue[*queue_cnt] =current_process;
         *queue_cnt = *queue_cnt + 1;
 
@@ -86,7 +86,7 @@ struct PCB handle_process_completion_pp(struct PCB ready_queue[QUEUEMAX], int *q
     int index =0;
     // find the max priority PCB
     for (int i=0;i<*queue_cnt;i++) {
-        if (is_null_pcb(*max_pcb)==1 ){
+        if (is_null_pcb(*max_pcb)){
             *max_pcb = ready_queue[i];
             continue;
         }
@@ -114,7 +114,7 @@ struct PCB handle_process_completion_pp(struct PCB ready_queue[QUEUEMAX], int *q
 
 struct PCB handle_process_arrival_srtp(struct PCB ready_queue[QUEUEMAX], int *queue_cnt, struct PCB current_process, struct PCB new_process, int time_stamp) {
     //If there is no currently-running process (i.e., the third argument is the NULLPCB), then the method returns the PCB of the newly-arriving process, indicating that it is the process to execute next. In this case, the PCB of the new process is modified so that the execution start time is set to the current timestamp, the execution end time is set to the sum of the current timestamp and the total burst time and the remaining burst time is set to the total burst time. 
-    if (is_null_pcb(current_process) == 1) {
+    if (is_null_pcb(current_process)) {
         new_process.execution_starttime = time_stamp;
         new_process.execution_endtime = time_stamp + new_process.total_bursttime;
         new_process.remaining_bursttime = new_process.total_bursttime;
@@ -172,7 +172,7 @@ struct PCB handle_process_completion_srtp(struct PCB ready_queue[QUEUEMAX], int 
     int index =0;
     // find the max priority PCB
     for (int i=0;i<*queue_cnt;i++) {
-        if (is_null_pcb(*max_pcb)==1 ){
+        if (is_null_pcb(*max_pcb)){
             *max_pcb = ready_queue[i];
             continue;
         }
@@ -203,7 +203,7 @@ struct PCB handle_process_arrival_rr(struct PCB ready_queue[QUEUEMAX], int *queu
     // indicating that it is the process to execute next. In this case, the PCB of the new process is modified so that the execution start time is set to the current timestamp,
     // the execution end time is set to the sum of the current timestamp and the smaller of the time quantum and the total burst time. 
     // The remaining burst time is set to the total burst time. 
-    if (is_null_pcb(current_process) == 1) {
+    if (is_null_pcb(current_process)) {
         new_process.execution_starttime = timestamp;
         new_process.remaining_bursttime = new_process.total_bursttime;
 
@@ -245,7 +245,7 @@ struct PCB handle_process_completion_rr(struct PCB ready_queue[QUEUEMAX], int *q
     int index =0;
     // find the max priority PCB
     for (int i=0;i<*queue_cnt;i++) {
-        if (is_null_pcb(*max_pcb)==1 ){
+        if (is_null_pcb(*max_pcb)){
             *max_pcb = ready_queue[i];
             continue;
         }
