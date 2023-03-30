@@ -168,32 +168,27 @@ struct PCB handle_process_completion_srtp(struct PCB ready_queue[QUEUEMAX], int 
     // Otherwise, the method finds the PCB of the process in the ready queue with the smallest remaining burst time, removes this PCB from the ready queue and returns it. 
     // Before returning the PCB of the next process to execute, it is modified to set the execution start time as the current timestamp and the execution end time 
     // as the sum of the current timestamp and the remaining burst time. 
-    struct PCB *max_pcb = &NULLPCB;
     int index =0;
     // find the max priority PCB
-    for (int i=0;i<*queue_cnt;i++) {
-        if (is_null_pcb(*max_pcb)){
-            *max_pcb = ready_queue[i];
-            continue;
-        }
-        if (ready_queue[i].remaining_bursttime < (*max_pcb).remaining_bursttime) {
-            *max_pcb = ready_queue[i];
+    for (int i=1;i<*queue_cnt;i++) {
+        if (ready_queue[i].remaining_bursttime < ready_queue[index].remaining_bursttime) {
             index = i;
         }
     }
 
+
+    struct PCB max_pcb = ready_queue[index];
     // remove selected PCB
-    for (int i=index;i<*queue_cnt-1;i++) {
+    for (int i=index;i<*queue_cnt;i++) {
         ready_queue[i] = ready_queue[i+1];
     }
+
     (*queue_cnt)--;
 
     // modify selected PCB
-    (*max_pcb).execution_starttime = timestamp;
-    (*max_pcb).execution_endtime = timestamp + (*max_pcb).remaining_bursttime;
-    return *max_pcb;
-    
-
+    max_pcb.execution_starttime = timestamp;
+    max_pcb.execution_endtime = timestamp + max_pcb.remaining_bursttime;
+    return max_pcb;
 };
 
 
@@ -241,33 +236,25 @@ struct PCB handle_process_completion_rr(struct PCB ready_queue[QUEUEMAX], int *q
     // Otherwise, the method finds the PCB of the process in the ready queue with the earliest arrival time, removes this PCB from the ready queue and returns it. 
     // Before returning this PCB, it is modified to set the execution start time as the current timestamp and the execution end time as the sum of the current 
     // timestamp and the smaller of the time quantum and the remaining burst time. 
-    struct PCB *max_pcb = &NULLPCB;
     int index =0;
     // find the max priority PCB
-    for (int i=0;i<*queue_cnt;i++) {
-        if (is_null_pcb(*max_pcb)){
-            *max_pcb = ready_queue[i];
-            continue;
-        }
-        if (ready_queue[i].arrival_timestamp < (*max_pcb).arrival_timestamp) {
-            *max_pcb = ready_queue[i];
+    for (int i=1;i<*queue_cnt;i++) {
+        if (ready_queue[i].arrival_timestamp < ready_queue[index].arrival_timestamp) {
             index = i;
         }
     }
 
+
+    struct PCB max_pcb = ready_queue[index];
     // remove selected PCB
-    for (int i=index;i<*queue_cnt-1;i++) {
+    for (int i=index;i<*queue_cnt;i++) {
         ready_queue[i] = ready_queue[i+1];
     }
+
     (*queue_cnt)--;
 
     // modify selected PCB
-    (*max_pcb).execution_starttime = time_stamp;
-
-    int time_to_add = time_quantum;
-        if ((*max_pcb).remaining_bursttime < time_quantum) {
-            time_to_add = (*max_pcb).remaining_bursttime;
-        }
-    (*max_pcb).execution_endtime = time_stamp + time_to_add;
-    return *max_pcb;
+    max_pcb.execution_starttime = time_stamp;
+    max_pcb.execution_endtime = time_stamp + max_pcb.remaining_bursttime;
+    return max_pcb;
 }; 
