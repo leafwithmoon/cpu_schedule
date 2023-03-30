@@ -1,5 +1,7 @@
 #include "oslabs.h"
 
+#include <stdio.h>
+
 // struct PCB {
 //        int process_id;
 //        int arrival_timestamp;
@@ -83,32 +85,28 @@ struct PCB handle_process_completion_pp(struct PCB ready_queue[QUEUEMAX], int *q
     // Otherwise, the method finds the PCB of the process in the ready queue with the highest priority (smaller integers for the priority field in the PCB mean higher priorities), 
     // removes this PCB from the ready queue and returns it. Before returning the PCB of the next process to execute, it is modified to set the execution start time as the current timestamp and 
     // the execution end time as the sum of the current timestamp and the remaining burst time. 
-    struct PCB *max_pcb = &NULLPCB;
+    
     int index =0;
     // find the max priority PCB
-    for (int i=0;i<*queue_cnt;i++) {
-        if (is_null_pcb(*max_pcb)){
-            *max_pcb = ready_queue[i];
-            continue;
-        }
-        if (ready_queue[i].process_priority < (*max_pcb).process_priority) {
-            *max_pcb = ready_queue[i];
+    for (int i=1;i<*queue_cnt;i++) {
+        if (ready_queue[i].process_priority < ready_queue[index].process_priority) {
             index = i;
         }
     }
 
+
+    struct PCB max_pcb = ready_queue[index];
     // remove selected PCB
-    for (int i=index;i<*queue_cnt-1;i++) {
+    for (int i=index;i<*queue_cnt;i++) {
         ready_queue[i] = ready_queue[i+1];
     }
+
     (*queue_cnt)--;
 
     // modify selected PCB
-    (*max_pcb).execution_starttime = timestamp;
-    (*max_pcb).execution_endtime = timestamp + (*max_pcb).remaining_bursttime;
-    return *max_pcb;
-    
-
+    max_pcb.execution_starttime = timestamp;
+    max_pcb.execution_endtime = timestamp + max_pcb.remaining_bursttime;
+    return max_pcb;
 
 };
 

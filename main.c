@@ -47,17 +47,17 @@ int main( int argc, char* argv[])
     int queue_cnt = 0;
     struct PCB process1;
     struct PCB process2;
-    // struct PCB process3;
+    struct PCB process3;
     int timestamp = 2;
-    int time_quantum = 6;
+    // int time_quantum = 6;
 
-    set_pcb(&process1, 1, 1, 8, 1, 9, 8, 0);
-    set_pcb(&process2, 2, 2, 8, 0, 0, 8, 0);
-    // set_pcb(&process3, 3, 1, 24, 0, 0, 24, 0);
+    set_pcb(&process1, 1, 1, 4, 0, 0, 4, 23);
+    set_pcb(&process2, 2, 1, 4, 0, 0, 4, 22);
+    set_pcb(&process3, 3, 1, 4, 0, 0, 4, 24);
 
-    // enqueue_pcb(ready_queue, &queue_cnt, &process1);
-    // enqueue_pcb(ready_queue, &queue_cnt, &process2);
-    // enqueue_pcb(ready_queue, &queue_cnt, &process3);
+    enqueue_pcb(ready_queue, &queue_cnt, &process1);
+    enqueue_pcb(ready_queue, &queue_cnt, &process2);
+    enqueue_pcb(ready_queue, &queue_cnt, &process3);
     
     printf("\n BEFORE\n\n");
 
@@ -73,7 +73,8 @@ int main( int argc, char* argv[])
     printf("\n AFTER\n\n");
     
     // struct PCB result = handle_process_arrival_pp(ready_queue, &queue_cnt, process1, process2, timestamp);
-    struct PCB result = handle_process_arrival_rr(ready_queue, &queue_cnt, process1, process2, timestamp,time_quantum);
+    // struct PCB result = handle_process_arrival_rr(ready_queue, &queue_cnt, process1, process2, timestamp,time_quantum);
+    struct PCB result = handle_process_completion_pp(ready_queue, &queue_cnt, timestamp);
 
     for(int i = 0; i < queue_cnt; ++i)
     {
